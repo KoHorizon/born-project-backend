@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column , BaseEntity, ManyToMany, ManyToOne, JoinTable} from "typeorm";
 import { Ingredient } from "./Ingredient";
-import { Order } from "./Order";
 import { Product } from "./Product";
 
 

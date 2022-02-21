@@ -1,33 +1,60 @@
 import express from 'express';
 // import { createConnection, getConnection } from "typeorm";
 import Connection from './Services/Connection';
-import * as jwtexpress from 'express-jwt';
 import * as bodyParser from 'body-parser';
-import * as jwt from 'jsonwebtoken'
+import * as jwtexpress from 'express-jwt';
+import routerAuth from './Routes/Auth';
+import routerUser from './Routes/User';
+import { User } from './models/User';
+import routerIngredient from './Routes/Ingredient';
+
+
+
 
 var jwtexpress = require('express-jwt');
 
 
 const app = express();
+const port = 3000;
+
+app.use(bodyParser.json())
+
+app.use(jwtexpress({ secret: 'ThisIsMySecretSentenceBlaBlaBla', algorithms: ['HS256']}).unless({
+  path: [
+      '/auth',
+      { url: "/users", methods: ['POST'] }
+  ]
+}));
 
 
 
-Connection.ConnectToDatabase()
+app.use( async(req, res, next) =>{
+
+  if (req.user) {
+    req.user = await User.findOne({where: {id: req.user.id}})
+    next()
+  } else {
+    next()
+  }
+
+})
 
 
-
-
-
-
+Connection.connectToDatabase();
 
 
 // app.use(bodyParser.json())
 
-const port = 3001;
-
-app.get('/', (req, res) => {
-  res.json({status:200, data: "Hello world" });
-});
 
 
-app.listen(port)
+
+app.use(routerAuth);
+app.use(routerUser);
+app.use(routerIngredient);
+
+
+
+
+app.listen(port, () => {
+  console.log("Je viens d'ouvrir la frotiere sur le port :" , port);
+})

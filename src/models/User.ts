@@ -11,7 +11,7 @@ export class User extends BaseEntity {
     name: string;
     
     @Column()
-    pincode: number;
+    pincode: string;
 
 
 

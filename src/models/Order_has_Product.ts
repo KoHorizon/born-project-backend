@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column , BaseEntity, ManyToMany, ManyToOne, JoinTable, OneToMany} from "typeorm";
 import { Exclude_Ingredient_For_Order } from "./Exclude_Ingredient_For_Order";
-import { Ingredient } from "./Ingredient";
 import { Order } from "./Order";
 import { Product } from "./Product";
 

@@ -1,7 +1,6 @@
 import { BaseEntity, OneToMany , ManyToMany ,Column, Entity , PrimaryGeneratedColumn, JoinTable} from "typeorm";
 import { Invoice } from "./Invoice";
 import { Order_has_Product } from "./Order_has_Product";
-import { User } from "./User";
 import { User_has_Order } from "./User_has_Order";
 
 @Entity()

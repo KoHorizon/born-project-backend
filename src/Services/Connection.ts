@@ -15,7 +15,7 @@ import { Invoice } from '../models/Invoice';
 
 class Connection {
 
-    static ConnectToDatabase () {
+    static connectToDatabase () {
 
         createConnection({
             type: "mysql",
@@ -38,7 +38,8 @@ class Connection {
             synchronize: true,
             logging: false
         })
-
+        .then(() => console.log('bonjours je suis la base de donne'))
+        .catch((err) => console.log('bonjours y a une bdd ?', err))
     }
 }
 

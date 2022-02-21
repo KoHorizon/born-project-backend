@@ -1,5 +1,4 @@
 import { Entity, PrimaryGeneratedColumn, Column , BaseEntity, ManyToMany, JoinTable, OneToMany} from "typeorm";
-import { Order } from "./Order";
 import { Order_has_Product } from "./Order_has_Product";
 import { Product_has_Ingredient } from "./Product_has_Ingredient";
 
@@ -11,6 +10,11 @@ export class Product extends BaseEntity {
 
     @Column()
     name: string;
+
+    @Column({
+        nullable: true,
+    })
+    img_name?: string;
     
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;
