@@ -39,8 +39,8 @@ routerIngredient.post('/ingredients',async (req, res) => {
 
 
 
-    let ingredient = new Ingredient();
     (req.body).forEach( async data => {
+        let ingredient = new Ingredient();
 
         Object.entries(data).forEach(([key, value]) => {
             // console.log(key , value); // key ,value

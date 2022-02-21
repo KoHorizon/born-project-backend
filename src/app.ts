@@ -7,7 +7,7 @@ import routerAuth from './Routes/Auth';
 import routerUser from './Routes/User';
 import { User } from './models/User';
 import routerIngredient from './Routes/Ingredient';
-
+require('dotenv').config();
 
 
 
@@ -19,7 +19,7 @@ const port = 3000;
 
 app.use(bodyParser.json())
 
-app.use(jwtexpress({ secret: 'ThisIsMySecretSentenceBlaBlaBla', algorithms: ['HS256']}).unless({
+app.use(jwtexpress({ secret: process.env.MY_SECRET_PASS, algorithms: ['HS256']}).unless({
   path: [
       '/auth',
       { url: "/users", methods: ['POST'] }
