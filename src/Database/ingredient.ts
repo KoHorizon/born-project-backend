@@ -1,22 +1,16 @@
-import express from 'express';
-import { Ingredient } from '../models/Ingredient';
+import { Ingredient } from "../models/Ingredient";
 
 
-let routerIngredient = express.Router();
 
-
-routerIngredient.post('/ingredients',async (req, res) => {
-
-    if (!Array.isArray(req.body)) {
-        return res.status(400).json({
-            status : 400,
-            response: 'Wrong format given'
-        })    
+export async function createIngredient(dataIngredient: Array<Ingredient>) {
+    
+    if (!Array.isArray(dataIngredient)) {
+        throw new Error('not array');  
     }
     let acceptedKeys = ['name','price','stock','img_name'];
     let validFormat = true;
 
-    (req.body).forEach(data => {        
+    (dataIngredient).forEach(data => {        
 
         acceptedKeys.forEach(key => {
             if (!(key in data)) {
@@ -31,19 +25,15 @@ routerIngredient.post('/ingredients',async (req, res) => {
     })
     
     if (!validFormat) {
-        return res.status(400).json({
-            status: 'error',
-            response: 'Wrong format given'
-        })
+        throw new Error('wrong format');
     }
 
 
 
-    (req.body).forEach( async data => {
+    (dataIngredient).forEach( async data => {
         let ingredient = new Ingredient();
 
         Object.entries(data).forEach(([key, value]) => {
-            // console.log(key , value); // key ,value
 
             switch (key) {
                 case "name":
@@ -59,20 +49,14 @@ routerIngredient.post('/ingredients',async (req, res) => {
                     ingredient.img_name = data.img_name;
                     break;
             }
-
-            
-        });
-        console.log(ingredient);
         
+        });        
         await Ingredient.save(ingredient);
-        
-        
     });
-    res.status(200).json({status: 200, data: 'Ingredient Data have been saved'})
+    return;
+}
 
-})
-
-
-
-
-export default routerIngredient;
+export async function getIngredient() {
+    const ingredient = await Ingredient.find()
+    return ingredient;
+}

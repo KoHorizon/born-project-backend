@@ -1,12 +1,11 @@
-import express from 'express';
+import express , { Request, Response, NextFunction}from 'express';
 // import { createConnection, getConnection } from "typeorm";
 import Connection from './Services/Connection';
 import * as bodyParser from 'body-parser';
 import * as jwtexpress from 'express-jwt';
-import routerAuth from './Routes/Auth';
-import routerUser from './Routes/User';
 import { User } from './models/User';
-import routerIngredient from './Routes/Ingredient';
+import router from './Routes';
+
 require('dotenv').config();
 
 
@@ -17,14 +16,20 @@ var jwtexpress = require('express-jwt');
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.json())
+app.use(express.json());
 
 app.use(jwtexpress({ secret: process.env.MY_SECRET_PASS, algorithms: ['HS256']}).unless({
   path: [
-      '/auth',
+      '/api/auth',
       { url: "/users", methods: ['POST'] }
   ]
-}));
+}),	function(err: Error, req: Request, res: Response, next: NextFunction) {
+	if (err.name === 'UnauthorizedError') {
+		res.status(401).send('invalid token...');
+		return;
+	}
+	next();
+});
 
 
 
@@ -43,14 +48,9 @@ app.use( async(req, res, next) =>{
 Connection.connectToDatabase();
 
 
-// app.use(bodyParser.json())
 
 
-
-
-app.use(routerAuth);
-app.use(routerUser);
-app.use(routerIngredient);
+app.use(router);
 
 
 
