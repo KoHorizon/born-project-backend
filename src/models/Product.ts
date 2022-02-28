@@ -15,6 +15,11 @@ export class Product extends BaseEntity {
         nullable: true,
     })
     img_name?: string;
+
+    @Column({
+        nullable: true,
+    })
+    availability: boolean;
     
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;
