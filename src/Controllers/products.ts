@@ -4,7 +4,7 @@ import { getProduct } from "../Database/product";
 
 
 
-export async function getProductController(req: Request, res: Response) {
+export async function productControllerGet(req: Request, res: Response) {
 
     try {
         const product = await getProduct();        
@@ -21,4 +21,13 @@ export async function getProductController(req: Request, res: Response) {
         
     }
     
+}
+
+
+export async function productControllerPost(req: Request, res: Response) {
+    try {
+        
+    } catch (error) {
+        
+    }
 }

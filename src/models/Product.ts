@@ -20,6 +20,11 @@ export class Product extends BaseEntity {
         nullable: true,
     })
     availability: boolean;
+
+    @Column({
+        nullable: true,
+    })
+    custom: boolean;
     
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;

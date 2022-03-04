@@ -35,8 +35,8 @@ export async function getProduct() {
             .where('id IN(:id)', {id: idOfAvailableProduct})
             .getRawMany();
             
-        const ingredient = await Product.find()
-        return ingredient;
+        const product = await Product.find()
+        return product;
     }
 
     
@@ -79,8 +79,8 @@ export async function getProduct() {
         return ingredient;
     }
 
-    const ingredient = await Product.find()
-    return ingredient;
+    const product = await Product.find()
+    return product;
 }
 
 
@@ -97,4 +97,18 @@ export async function checkProductAvailability(idTocheckProductAvailability:Arra
         .execute();
     } 
 
+}
+
+
+export async function postProduct(productToCreate: Product) {
+    let product = new Product();
+    
+    product.img_name = productToCreate.img_name
+    product.custom = false
+    product.name = productToCreate.name
+    product.price = productToCreate.price
+    product.availability = false
+
+    await Product.save(product);
+    return product;    
 }
