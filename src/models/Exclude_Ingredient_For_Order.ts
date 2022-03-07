@@ -13,8 +13,6 @@ export class Exclude_Ingredient_For_Order extends BaseEntity {
     ingredient: Ingredient
 
 
-
     @ManyToOne(() => Order_has_Product, order_h_product => order_h_product.exclude_ingredient_for_order)
     order_h_product: Order_has_Product
-
 }

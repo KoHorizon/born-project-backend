@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column , BaseEntity, ManyToMany, ManyToOne, JoinTable} from "typeorm";
+import { Custom_Product } from "./Custom_Product";
 import { Ingredient } from "./Ingredient";
 import { Product } from "./Product";
 
@@ -14,6 +15,10 @@ export class Product_has_Ingredient extends BaseEntity {
 
     @ManyToOne(() => Ingredient, ingredient => ingredient.product_h_ingredient)
     ingredient: Ingredient
+
+
+    @ManyToOne(() => Custom_Product, product_custom => product_custom.product_h_ingredient)
+    product_custom: Custom_Product
 }
 
 

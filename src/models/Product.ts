@@ -25,6 +25,11 @@ export class Product extends BaseEntity {
         nullable: true,
     })
     custom: boolean;
+
+    @Column({
+        nullable: true,
+    })
+    day_special: boolean;
     
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;

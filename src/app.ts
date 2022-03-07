@@ -5,6 +5,7 @@ import * as bodyParser from 'body-parser';
 import * as jwtexpress from 'express-jwt';
 import { User } from './models/User';
 import router from './Routes';
+import cors from 'cors';
 
 require('dotenv').config();
 
@@ -15,6 +16,7 @@ var jwtexpress = require('express-jwt');
 
 const app = express();
 const port = 3000;
+app.use(cors());
 
 app.use(express.json());
 

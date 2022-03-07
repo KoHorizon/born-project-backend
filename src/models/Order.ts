@@ -14,6 +14,11 @@ export class Order extends BaseEntity {
     @Column()
     state: boolean;
 
+    @Column({
+        nullable: true,
+    })
+    email?: string;
+
     @OneToMany(() => User_has_Order, user_h_order => user_h_order.order)
     user_h_order : User_has_Order[]
 

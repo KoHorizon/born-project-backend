@@ -3,32 +3,31 @@ import { createProduct } from "../Interface/productInterface";
 import { Ingredient } from "../models/Ingredient";
 import { Product } from "../models/Product";
 import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
-import { postProduct } from "./product";
+import { getCustomProductPrice, updatePriceOfCustomProduct } from "./customProduct";
+import { postCustomProduct, postProduct } from "./product";
 
 
 
-
-// export async function createProductHasIngredient(dataProductAndIngredient: any) {
-
-//     try {
-
-//     } catch (error) {
-//         console.log('data have not be published');
-        
-//     }
-// }
 
 export async function createCustomProducts(customProduct:any) {
-
-    customProduct.ingredients.forEach(async (ingredient) => {
+    
+    const postedCustomProduct = await postCustomProduct()
+    const productToLinkWithIngredient = postedCustomProduct;
+    const customProductId = productToLinkWithIngredient.id;
+    
+    await Promise.all(customProduct.ingredients.map(async (ingredient: any) => {
         let productHasIngredient = new Product_has_Ingredient();
-
-        productHasIngredient.product = customProduct.product.id
+        
+        productHasIngredient.product_custom = productToLinkWithIngredient
         productHasIngredient.ingredient = ingredient.id
-
+        
         await Product_has_Ingredient.save(productHasIngredient)
-    })
-    return;
+    }))
+    
+    const priceOfCustomProduct = await getCustomProductPrice(customProductId);
+    const updatedPriceCustomProductData = await updatePriceOfCustomProduct(customProductId ,priceOfCustomProduct);
+
+    return updatedPriceCustomProductData;
 }
 
 
@@ -45,7 +44,7 @@ export async function createOfficialProducts(officialProduct:any) {
         productHasIngredient.product = productToLinkWithIngredient
         productHasIngredient.ingredient = ingredient.id
 
-        await Product_has_Ingredient.save(productHasIngredient)
+        await Product_has_Ingredient.save(productHasIngredient)        
     })
     return;
     

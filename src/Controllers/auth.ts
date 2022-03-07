@@ -14,5 +14,5 @@ export async function authControllerPost(req: Request, res: Response) {
 
     let token = jwt.sign({ id: user.id }, process.env.MY_SECRET_PASS);
 
-    res.json({status: 200, data: token})
+    res.json({status: 200, access_token: token})
 }

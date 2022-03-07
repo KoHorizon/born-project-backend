@@ -10,7 +10,7 @@ export async function productControllerGet(req: Request, res: Response) {
         const product = await getProduct();        
         return res.status(200).json({
             status: 200,
-            data: product
+            product: product
         })
         
     } catch (error) {

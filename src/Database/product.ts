@@ -2,6 +2,7 @@ import { Product } from "../models/Product";
 import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
 import {getConnection, getRepository} from "typeorm";
 import { Ingredient } from "../models/Ingredient";
+import { Custom_Product } from "../models/Custom_Product";
 
 export async function getProduct() {
     
@@ -108,7 +109,19 @@ export async function postProduct(productToCreate: Product) {
     product.name = productToCreate.name
     product.price = productToCreate.price
     product.availability = false
+    product.day_special = productToCreate.day_special
 
     await Product.save(product);
     return product;    
+}
+
+
+export async function postCustomProduct() {
+    let customProduct = new Custom_Product();
+
+    customProduct.price = 0.00
+
+
+    await Custom_Product.save(customProduct);
+    return customProduct;    
 }
