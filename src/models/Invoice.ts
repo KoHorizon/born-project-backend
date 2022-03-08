@@ -13,7 +13,8 @@ export class Invoice extends BaseEntity {
     @ManyToOne(() => Order, order => order.invoice)
     order: Order;
 
-    
+    @Column("decimal", { precision: 10, scale: 2 })
+    price: number;
 
     
 }

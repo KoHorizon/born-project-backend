@@ -125,3 +125,14 @@ export async function postCustomProduct() {
     await Custom_Product.save(customProduct);
     return customProduct;    
 }
+
+
+export async function getProdudct(id: number) {
+    console.log(id);
+    
+    return await getRepository(Product)
+            .createQueryBuilder('product')
+            .select(['product.id'])
+            .where('product.id = (:id)', {id: id })
+            .getRawMany();
+}

@@ -18,14 +18,15 @@ export async function productHasIngredientControllerPost(req: Request, res: Resp
             const product = postedData;
 
             switch (custom){
-                case true:
-                    createCustomProducts(product);
-                    break;
                 case false:
                     createOfficialProducts(product);
                     break;
             }
             
+            return res.status(200).json({
+                status: 200,
+                response: 'The product have been created and linked to the given ingredients'
+            })
         })
     } catch (error) {
         console.log('there is an error');

@@ -1,7 +1,3 @@
-import { getRepository } from "typeorm";
-import { createProduct } from "../Interface/productInterface";
-import { Ingredient } from "../models/Ingredient";
-import { Product } from "../models/Product";
 import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
 import { getCustomProductPrice, updatePriceOfCustomProduct } from "./customProduct";
 import { postCustomProduct, postProduct } from "./product";
@@ -11,23 +7,27 @@ import { postCustomProduct, postProduct } from "./product";
 
 export async function createCustomProducts(customProduct:any) {
     
-    const postedCustomProduct = await postCustomProduct()
-    const productToLinkWithIngredient = postedCustomProduct;
-    const customProductId = productToLinkWithIngredient.id;
-    
-    await Promise.all(customProduct.ingredients.map(async (ingredient: any) => {
-        let productHasIngredient = new Product_has_Ingredient();
-        
-        productHasIngredient.product_custom = productToLinkWithIngredient
-        productHasIngredient.ingredient = ingredient.id
-        
-        await Product_has_Ingredient.save(productHasIngredient)
-    }))
-    
-    const priceOfCustomProduct = await getCustomProductPrice(customProductId);
-    const updatedPriceCustomProductData = await updatePriceOfCustomProduct(customProductId ,priceOfCustomProduct);
+    if (customProduct.ingredients.length > 0 ) {
 
-    return updatedPriceCustomProductData;
+        const postedCustomProduct = await postCustomProduct()
+        const productToLinkWithIngredient = postedCustomProduct;
+        const customProductId = productToLinkWithIngredient.id;
+    
+        await Promise.all(customProduct.ingredients.map(async (ingredient: any) => {
+            let productHasIngredient = new Product_has_Ingredient();
+            
+            productHasIngredient.product_custom = productToLinkWithIngredient
+            productHasIngredient.ingredient = ingredient.id
+            
+            await Product_has_Ingredient.save(productHasIngredient)
+        }))
+        
+        const priceOfCustomProduct = await getCustomProductPrice(customProductId);
+        const updatedPriceCustomProductData = await updatePriceOfCustomProduct(customProductId, priceOfCustomProduct);
+    
+        return postedCustomProduct;
+    }
+    return;
 }
 
 
