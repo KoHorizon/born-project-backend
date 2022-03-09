@@ -8,7 +8,7 @@ export async function productHasIngredientControllerPost(req: Request, res: Resp
     const productAndIngredientData = req.body;
     if (!Array.isArray(productAndIngredientData)) {
         throw new Error('not array');  
-    }  
+    }
     
     try {
         
@@ -19,8 +19,18 @@ export async function productHasIngredientControllerPost(req: Request, res: Resp
 
             switch (custom){
                 case false:
-                    createOfficialProducts(product);
-                    break;
+                    try {
+                        const preoductCreate = await createOfficialProducts(product);
+                        if (preoductCreate === 'no ingredient correspond') {
+                            return res.status(404).json({
+                                status: 404,
+                                response: 'no ingredient correspond'
+                            })
+                        } 
+                    } catch (error) {
+                        console.log(error);
+                    }
+                break;
             }
             
             return res.status(200).json({

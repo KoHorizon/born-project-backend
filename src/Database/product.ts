@@ -107,9 +107,9 @@ export async function postProduct(productToCreate: Product) {
     product.img_name = productToCreate.img_name
     product.custom = false
     product.name = productToCreate.name
-    product.price = productToCreate.price
+    product.price = 0
     product.availability = false
-    product.day_special = productToCreate.day_special
+    product.day_special = false
 
     await Product.save(product);
     return product;    
@@ -135,4 +135,14 @@ export async function getProdudct(id: number) {
             .select(['product.id'])
             .where('product.id = (:id)', {id: id })
             .getRawMany();
+}
+
+
+export async function updatePriceOfProduct(idOfProduct: any, price: any) {
+    return await getConnection()
+        .createQueryBuilder()
+        .update(Product)
+        .set({'price': price})
+        .where("id = (:id)", {id: idOfProduct})
+        .execute();
 }

@@ -59,7 +59,7 @@ export async function createIngredient(dataIngredient: Array<Ingredient>) {
     return;
 }
 
-export async function getIngredient() {
+export async function getIngredientAll() {
     const ingredient = await Ingredient.find()
     return ingredient;
 }
@@ -71,4 +71,23 @@ export async function getIngredientOfProduct(product: Product) {
             .select(['product.ingredientid'])
             .where('product.productid = (:id)', {id: product.id })
             .getRawMany();
+}
+
+export async function getPriceOfIngredient(idIngredientId: any) {
+    
+    return await getRepository(Ingredient)
+        .createQueryBuilder('ingredient')
+        .select(['ingredient.price'])
+        .where('ingredient.id = (:id)', {id: idIngredientId })
+        .getRawMany();
+}
+
+
+export async function getIngredient(idIngredientId: any) {
+    
+    return await getRepository(Ingredient)
+        .createQueryBuilder('ingredient')
+        .select(['ingredient.id'])
+        .where('ingredient.id = (:id)', {id: idIngredientId })
+        .getRawMany();
 }

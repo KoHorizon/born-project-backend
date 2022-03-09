@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { createIngredient, getIngredient } from '../Database/ingredient';
+import { createIngredient, getIngredientAll } from '../Database/ingredient';
 
 
 
@@ -31,7 +31,7 @@ export async function ingredientControllerPost(req: Request, res: Response) {
 
 export async function ingredientControllerGet(req: Request, res: Response) {
     try {
-        const ingredient = await getIngredient();
+        const ingredient = await getIngredientAll();
         return res.status(200).json({
             status: 200,
             data: ingredient

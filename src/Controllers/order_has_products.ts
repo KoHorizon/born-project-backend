@@ -1,8 +1,8 @@
 import { Response, Request } from 'express';
 import createOrder from '../Database/order';
 import { createOrderHasProductCustom, createOrderHasProductOfficial } from '../Database/order_has_products';
-import { getProdudct } from '../Database/product';
 import { createCustomProducts } from '../Database/product_has_ingredient';
+import { Order } from '../models/Order';
 import { excludeIngredient } from './exclude_ingredient_for_order';
 
 
@@ -28,12 +28,12 @@ export async function orderHasProductPost(req: Request, res: Response) {
                         response: 'no ingredient given'
                     })
                 }
-                const createCustProduct = await createCustomProducts(product);
-                const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustProduct); // create order has custom product here                
+                // const createCustProduct = await createCustomProducts(product);
+                // const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustProduct); // create order has custom product here                
 
             } else {
-                const createdOrderHasProductOfficial = await createOrderHasProductOfficial(createdOrder, product.product); // create order has official product here             
-                const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
+                // const createdOrderHasProductOfficial = await createOrderHasProductOfficial(createdOrder, product.product); // create order has official product here             
+                // const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
                 
             }
             
@@ -44,4 +44,10 @@ export async function orderHasProductPost(req: Request, res: Response) {
         throw error;
     }
 
+}
+
+
+
+export async function orderHasPrice(order: Order) {
+    
 }
