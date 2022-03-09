@@ -1,4 +1,7 @@
+import { getRepository } from "typeorm";
 import { Ingredient } from "../models/Ingredient";
+import { Product } from "../models/Product";
+import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
 
 
 
@@ -59,4 +62,13 @@ export async function createIngredient(dataIngredient: Array<Ingredient>) {
 export async function getIngredient() {
     const ingredient = await Ingredient.find()
     return ingredient;
+}
+
+
+export async function getIngredientOfProduct(product: Product) {
+    return await getRepository(Product_has_Ingredient)
+            .createQueryBuilder('product')
+            .select(['product.ingredientid'])
+            .where('product.productid = (:id)', {id: product.id })
+            .getRawMany();
 }

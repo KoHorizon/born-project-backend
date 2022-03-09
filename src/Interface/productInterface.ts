@@ -3,5 +3,5 @@ import { Product } from "../models/Product";
 
 export interface createProduct {
     products: Product;
-    ingedients: Array<[Ingredient]>;
+    ingedients: Array<Ingredient>;
 }

@@ -3,11 +3,12 @@ import createOrder from '../Database/order';
 import { createOrderHasProductCustom, createOrderHasProductOfficial } from '../Database/order_has_products';
 import { getProdudct } from '../Database/product';
 import { createCustomProducts } from '../Database/product_has_ingredient';
+import { excludeIngredient } from './exclude_ingredient_for_order';
 
 
 export async function orderHasProductPost(req: Request, res: Response) {
     const productAndIngredientData = req.body;
-
+    
     if (!Array.isArray(productAndIngredientData)) {
         throw new Error('not array');  
     }  
@@ -28,11 +29,12 @@ export async function orderHasProductPost(req: Request, res: Response) {
                     })
                 }
                 const createCustProduct = await createCustomProducts(product);
-
-                const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustProduct); // create order has custom product here
+                const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustProduct); // create order has custom product here                
 
             } else {
                 const createdOrderHasProductOfficial = await createOrderHasProductOfficial(createdOrder, product.product); // create order has official product here             
+                const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
+                
             }
             
             // create function to createInvoice
