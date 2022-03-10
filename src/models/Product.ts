@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column , BaseEntity, ManyToMany, JoinTable, OneToMany} from "typeorm";
+import { Exclude_Ingredient_For_Order } from "./Exclude_Ingredient_For_Order";
 import { Order_has_Product } from "./Order_has_Product";
 import { Product_has_Ingredient } from "./Product_has_Ingredient";
 
@@ -40,4 +41,8 @@ export class Product extends BaseEntity {
 
     @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.product)
     product_h_ingredient : Product_has_Ingredient[]
+
+
+    @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.product)
+    exclude_ingredient_for_order : Exclude_Ingredient_For_Order[]
 }

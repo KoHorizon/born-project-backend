@@ -1,3 +1,4 @@
+import { getRepository } from 'typeorm';
 import { Custom_Product } from '../models/Custom_Product';
 import { Order } from '../models/Order';
 import { Order_has_Product } from '../models/Order_has_Product';
@@ -29,3 +30,14 @@ export async function createOrderHasProductOfficial( order: Order, product: Prod
         
     }
 }
+
+
+export async function getOrderProducts(order: Order) {
+    
+    return await getRepository(Order_has_Product) // Get every ingredient that have 0 stocl
+        .createQueryBuilder( "order")
+        .select(['order.productid','order.productcustomid'])
+        .where("order.orderid = (:id)", {id: order.id})
+        .getRawMany();   
+}
+

@@ -1,6 +1,9 @@
 import { Response, Request } from 'express';
+import { getCustomProductPrice } from '../Database/customProduct';
+import { createInvoice } from '../Database/invoice';
 import createOrder from '../Database/order';
-import { createOrderHasProductCustom, createOrderHasProductOfficial } from '../Database/order_has_products';
+import { createOrderHasProductCustom, createOrderHasProductOfficial, getOrderProducts } from '../Database/order_has_products';
+import { getOfficialProductPrice } from '../Database/product';
 import { createCustomProducts } from '../Database/product_has_ingredient';
 import { Order } from '../models/Order';
 import { excludeIngredient } from './exclude_ingredient_for_order';
@@ -17,7 +20,7 @@ export async function orderHasProductPost(req: Request, res: Response) {
         const email = productAndIngredientData[0].email;
         const createdOrder = await createOrder(email); // create order here
 
-        productAndIngredientData.forEach(async postedData => { // forEach in given data of order products
+        for await (const postedData of productAndIngredientData) {
             const custom = postedData.product.custom;
             const product = postedData;
             
@@ -28,17 +31,26 @@ export async function orderHasProductPost(req: Request, res: Response) {
                         response: 'no ingredient given'
                     })
                 }
-                // const createCustProduct = await createCustomProducts(product);
-                // const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustProduct); // create order has custom product here                
-
+                const createCustomProduct = await createCustomProducts(product);
+                const createdOrderHasProductCustom = await createOrderHasProductCustom(createdOrder, createCustomProduct); // create order has custom product here                
             } else {
-                // const createdOrderHasProductOfficial = await createOrderHasProductOfficial(createdOrder, product.product); // create order has official product here             
-                // const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
+                const createdOrderHasProductOfficial = await createOrderHasProductOfficial(createdOrder, product.product); // create order has official product here             
+                const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
                 
             }
             
-            // create function to createInvoice
+            
+            
+        }
+        // create function to createInvoicex
+        const getPriceOfOrder = await orderHasPrice(createdOrder);
+        const invoiceCreation = await createInvoice(getPriceOfOrder, createdOrder)
+        
 
+        res.status(200).json({
+            status: 200,
+            response: 'Order and Invoice have benn created',
+            invoice: invoiceCreation
         })
     } catch (error) {
         throw error;
@@ -49,5 +61,21 @@ export async function orderHasProductPost(req: Request, res: Response) {
 
 
 export async function orderHasPrice(order: Order) {
-    
+    const getProductOfOrder = await getOrderProducts(order);
+    let price = 0;
+    for await (const product of getProductOfOrder) {
+        
+        if (product.productid != null) {
+            const priceOfOfficialProduct = await getOfficialProductPrice(product.productid)
+            
+            for (const {product_price} of priceOfOfficialProduct) {
+                price += parseFloat(product_price);
+            }
+        } 
+        if (product.productcustomid != null) {
+            const priceCustomProduct = await getCustomProductPrice(product.productcustomid)
+            price += priceCustomProduct
+        }
+    }
+    return price;
 }

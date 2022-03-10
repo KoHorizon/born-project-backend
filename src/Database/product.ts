@@ -146,3 +146,12 @@ export async function updatePriceOfProduct(idOfProduct: any, price: any) {
         .where("id = (:id)", {id: idOfProduct})
         .execute();
 }
+
+
+export async function getOfficialProductPrice(productId: number) {
+    return await getRepository(Product)
+            .createQueryBuilder('product')
+            .select(['product.price'])
+            .where('product.id = (:id)', {id: productId })
+            .getRawMany();
+}
