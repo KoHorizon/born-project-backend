@@ -41,3 +41,12 @@ export async function getOrderProducts(order: Order) {
         .getRawMany();   
 }
 
+
+
+export async function getIdOfOrderHasProduct(order: Order) {
+    return await getRepository(Order_has_Product) // Get every ingredient that have 0 stocl
+        .createQueryBuilder( "order_h_product")
+        .select(['order_h_product.id'])
+        .where("order_h_product.orderid = (:id)", {id: order.id})
+        .getRawMany();   
+}

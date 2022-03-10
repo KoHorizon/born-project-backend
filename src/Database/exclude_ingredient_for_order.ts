@@ -1,3 +1,4 @@
+import { getRepository } from "typeorm";
 import { Exclude_Ingredient_For_Order } from "../models/Exclude_Ingredient_For_Order";
 import { Order } from "../models/Order";
 import { Order_has_Product } from "../models/Order_has_Product";
@@ -19,4 +20,13 @@ export async function postExcludedIngredient(excludeIngredient: any, createdOrde
         throw error
     }
     
+}
+
+
+export async function getExcludeIngredientOfOrder(arrayOfOrderHasProductId: any) {
+    return await getRepository(Exclude_Ingredient_For_Order) // get the unavailable product with stock id's
+        .createQueryBuilder('exclude_ingredient')
+        .select(['exclude_ingredient.ingredientid'])
+        .where('exclude_ingredient.orderhproductid IN(:id)', {id: arrayOfOrderHasProductId})
+        .getRawMany();
 }
