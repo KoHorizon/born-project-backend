@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { Ingredient } from "../models/Ingredient";
 import { Product } from "../models/Product";
 import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
@@ -73,6 +73,14 @@ export async function getIngredientOfProduct(product: Product) {
             .getRawMany();
 }
 
+export async function getIngredientOfProductById(productId: any) {
+    return await getRepository(Product_has_Ingredient)
+            .createQueryBuilder('product')
+            .select(['product.ingredientid'])
+            .where('product.productid = (:id)', {id: productId })
+            .getRawMany();
+}
+
 export async function getPriceOfIngredient(idIngredientId: any) {
     
     return await getRepository(Ingredient)
@@ -90,4 +98,17 @@ export async function getIngredient(idIngredientId: any) {
         .select(['ingredient.id'])
         .where('ingredient.id = (:id)', {id: idIngredientId })
         .getRawMany();
+}
+
+
+export async function substractIngredientStock(arrayOfIdToSubstract: any) {
+    for await (const id of arrayOfIdToSubstract) {
+        await getConnection()
+            .createQueryBuilder()
+            .update(Ingredient)
+            .set({stock: () => "stock - 1"})
+            .where("id = (:id)", {id: id})
+            .execute();    
+    }
+
 }

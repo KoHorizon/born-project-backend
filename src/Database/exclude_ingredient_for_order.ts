@@ -30,3 +30,12 @@ export async function getExcludeIngredientOfOrder(arrayOfOrderHasProductId: any)
         .where('exclude_ingredient.orderhproductid IN(:id)', {id: arrayOfOrderHasProductId})
         .getRawMany();
 }
+
+
+export async function getIngredientOfOrder(arrayOfOrderHasProductId: any) {
+    return await getRepository(Exclude_Ingredient_For_Order) // get the unavailable product with stock id's
+        .createQueryBuilder('exclude_ingredient')
+        .select(['exclude_ingredient.ingredientid'])
+        .where('exclude_ingredient.orderhproductid IN(:id)', {id: arrayOfOrderHasProductId})
+        .getRawMany();
+}

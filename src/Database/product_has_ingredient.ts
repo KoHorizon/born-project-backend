@@ -1,4 +1,5 @@
 import { error } from "console";
+import { getRepository } from "typeorm";
 import { Product_has_Ingredient } from "../models/Product_has_Ingredient";
 import { getCustomProductPrice, updatePriceOfCustomProduct } from "./customProduct";
 import { getIngredient, getIngredientAll, getPriceOfIngredient } from "./ingredient";
@@ -90,4 +91,12 @@ export async function createOfficialProducts(officialProduct:any) {
         throw error
     }
     
+}
+
+export async function getIngredientOfCustomProduct(productId: any) {    
+    return await getRepository(Product_has_Ingredient) // Get every ingredient that have 0 stocl
+        .createQueryBuilder( "product")
+        .select(['product.ingredientid'])
+        .where("product.productcustomid = (:id)", {id: productId})
+        .getRawMany(); 
 }

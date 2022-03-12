@@ -9,6 +9,7 @@ import { getOfficialProductPrice } from '../Database/product';
 import { createCustomProducts } from '../Database/product_has_ingredient';
 import { Order } from '../models/Order';
 import { excludeIngredient } from './exclude_ingredient_for_order';
+import { getIngredientOfOrder } from './ingredients';
 
 
 export async function orderHasProductPost(req: Request, res: Response) {
@@ -40,13 +41,12 @@ export async function orderHasProductPost(req: Request, res: Response) {
                 const excludedProduct = await excludeIngredient(product.exclude_ingredients, product, createdOrderHasProductOfficial)
                 
             }
-            
-            
-            
         }
-        // create function to createInvoicex
-        const getPriceOfOrder = await orderHasPrice(createdOrder);
-        const invoiceCreation = await createInvoice(getPriceOfOrder, createdOrder)
+        // create function to createInvoice
+        const priceOfOrder = await orderHasPrice(createdOrder);
+        const invoiceCreation = await createInvoice(priceOfOrder, createdOrder);
+        const ingredientOfOrder = await getIngredientOfOrder(createdOrder);
+        // console.log(createdOrder);
         
 
         res.status(200).json({
@@ -71,10 +71,10 @@ export async function orderHasPrice(order: Order) {
     }
     const getExcludeIngredient = await getExcludeIngredientOfOrder(idOfOrderHasProduct)
 
-    const getProductOfOrder = await getOrderProducts(order);
+    const productOfOrder = await getOrderProducts(order);
     let price = 0;
 
-    for await (const product of getProductOfOrder) {  // addition price of official Product and Custom Product
+    for await (const product of productOfOrder) {  // addition price of official Product and Custom Product
         
         if (product.productid != null) {
             const priceOfOfficialProduct = await getOfficialProductPrice(product.productid)
@@ -94,5 +94,6 @@ export async function orderHasPrice(order: Order) {
         const priceOfIngredient = await getPriceOfIngredient(ingredientid);
         price -= parseFloat(priceOfIngredient[0].ingredient_price);
     }    
+    
     return price;
 }

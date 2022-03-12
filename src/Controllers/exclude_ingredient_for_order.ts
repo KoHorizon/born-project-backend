@@ -10,8 +10,7 @@ export async function excludeIngredient(ingredientToExclude: [Ingredient], produ
     // All the query are done with the ID's.
     const productData = product.product;
 
-    // console.log(productData);
-    // return
+
     let ingredientsIdOfProduct = []
     let ingredientCanBeExcluded = true;
 
