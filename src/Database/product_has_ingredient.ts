@@ -100,3 +100,8 @@ export async function getIngredientOfCustomProduct(productId: any) {
         .where("product.productcustomid = (:id)", {id: productId})
         .getRawMany(); 
 }
+
+export async function getIngredientOfOffialProductById(productId: number) {
+    return await Product_has_Ingredient.find({where:{product: productId}, relations: ["ingredient"]  })
+    // return await Product.find({where:{id : productId}, relations: ["product_h_ingredient", "product_h_ingredient.ingredient"]})
+}

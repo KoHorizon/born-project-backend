@@ -155,3 +155,8 @@ export async function getOfficialProductPrice(productId: number) {
             .where('product.id = (:id)', {id: productId })
             .getRawMany();
 }
+
+
+export async function getProductById(productId: number) {
+    return await Product.find({where:{id: productId}})
+}

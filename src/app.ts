@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(jwtexpress({ secret: process.env.MY_SECRET_PASS, algorithms: ['HS256']}).unless({
   path: [
       '/api/auth',
-      { url: "/users", methods: ['POST'] }
+      { url: "/api/users", methods: ['POST'] }
   ]
 }),	function(err: Error, req: Request, res: Response, next: NextFunction) {
 	if (err.name === 'UnauthorizedError') {

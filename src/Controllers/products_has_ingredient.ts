@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
-import { postProduct } from '../Database/product';
-import { createCustomProducts, createOfficialProducts } from '../Database/product_has_ingredient';
+import { getProductById, postProduct } from '../Database/product';
+import { createCustomProducts, createOfficialProducts, getIngredientOfOffialProductById } from '../Database/product_has_ingredient';
+import { Product_has_Ingredient } from '../models/Product_has_Ingredient';
 
 
 
@@ -40,6 +41,40 @@ export async function productHasIngredientControllerPost(req: Request, res: Resp
         })
     } catch (error) {
         console.log('there is an error');
+        
+    }
+}
+
+
+export async function productHasIngredientGet(req: Request, res: Response) {
+    const productId = parseInt(req.params.id, 10)
+    const ingredients = []
+
+    let responseData = {}
+
+    try {
+        const dataOfProduct = await getProductById(productId)
+        
+        const ingredientOfProduct = await getIngredientOfOffialProductById(productId)
+        
+        for await (const { ingredient } of ingredientOfProduct) {
+            ingredients.push(ingredient)
+        }
+
+
+        responseData['product'] = dataOfProduct[0]
+        responseData['ingredients'] = ingredients
+
+        res.status(200).json({
+            status: 200,
+            response: responseData
+        })
+
+    } catch (error) {
+        res.status(400).json({
+            status: 400,
+            response: 'An Error happend'
+        })
         
     }
 }

@@ -45,9 +45,7 @@ export async function orderHasProductPost(req: Request, res: Response) {
         // create function to createInvoice
         const priceOfOrder = await orderHasPrice(createdOrder);
         const invoiceCreation = await createInvoice(priceOfOrder, createdOrder);
-        const ingredientOfOrder = await getIngredientOfOrder(createdOrder);
-        // console.log(createdOrder);
-        
+        const ingredientOfOrder = await getIngredientOfOrder(createdOrder);        
 
         res.status(200).json({
             status: 200,
