@@ -38,7 +38,7 @@ export async function ingredientControllerGet(req: Request, res: Response) {
         const ingredient = await getIngredientAll();
         return res.status(200).json({
             status: 200,
-            data: ingredient
+            ingredient: ingredient
         })
     } catch (error) {
         return res.status(404).json({

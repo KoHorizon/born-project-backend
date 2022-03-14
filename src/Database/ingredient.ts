@@ -110,5 +110,4 @@ export async function substractIngredientStock(arrayOfIdToSubstract: any) {
             .where("id = (:id)", {id: id})
             .execute();    
     }
-
 }
