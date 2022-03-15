@@ -33,9 +33,20 @@ export async function getExcludeIngredientOfOrder(arrayOfOrderHasProductId: any)
 
 
 export async function getIngredientOfOrder(arrayOfOrderHasProductId: any) {
+    console.log(arrayOfOrderHasProductId);
+    
     return await getRepository(Exclude_Ingredient_For_Order) // get the unavailable product with stock id's
         .createQueryBuilder('exclude_ingredient')
         .select(['exclude_ingredient.ingredientid'])
         .where('exclude_ingredient.orderhproductid IN(:id)', {id: arrayOfOrderHasProductId})
+        .getRawMany();
+}
+
+
+export async function getExcludeIngredientOfOrderbyId(id: any) {
+    return await getRepository(Exclude_Ingredient_For_Order) // get the unavailable product with stock id's
+        .createQueryBuilder('exclude_ingredient')
+        .select(['exclude_ingredient.ingredientid','exclude_ingredient.productid'])
+        .where('exclude_ingredient.orderhproductid IN(:id)', {id: id})
         .getRawMany();
 }

@@ -50,3 +50,36 @@ export async function getIdOfOrderHasProduct(order: Order) {
         .where("order_h_product.orderid = (:id)", {id: order.id})
         .getRawMany();   
 }
+
+
+export async function getIdOfOrderHasProductById(orderID: Order) {
+    return await getRepository(Order_has_Product) // Get every ingredient that have 0 stocl
+        .createQueryBuilder( "order_h_product")
+        .select(['order_h_product.id','order_h_product.productid',])
+        .where("order_h_product.orderid = (:id)", {id: orderID})
+        .getRawMany();   
+}
+
+
+// ==================================================================
+
+
+// export async function getOrderProductsById(orderId: Order) {
+    
+//     return await getRepository(Order_has_Product) // Get every ingredient that have 0 stocl
+//         .createQueryBuilder( "order")
+//         .select(['order.productid','order.productcustomid'])
+//         .where("order.orderid = (:id) AND order.productid != :null", {id: orderId, null: null})
+//         .getRawMany();   
+// }
+
+
+
+export async function getOrderProductsByIdThatDontHaveExcludeIngredient(orderId: Order) {
+    
+    return await getRepository(Order_has_Product) // Get every ingredient that have 0 stocl
+        .createQueryBuilder( "order")
+        .select(['order.productid'])
+        .where("order.id = (:id)", {id: orderId})
+        .getRawMany();   
+}

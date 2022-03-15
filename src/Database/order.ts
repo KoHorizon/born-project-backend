@@ -1,3 +1,4 @@
+import { getRepository } from "typeorm";
 import { Order } from "../models/Order";
 
 
@@ -19,4 +20,15 @@ export default async function createOrder(email) {
     }
     
     return await Order.save(order);
+}
+
+
+
+export async function getOrderUndone() {
+    return await getRepository(Order) // Get every ingredient that have 0 stocl
+    .createQueryBuilder( "order")
+    .select(['order.id'])
+    .where("order.state = (:state)", {state: false})
+    .getRawMany();   
+    
 }

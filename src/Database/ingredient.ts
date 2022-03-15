@@ -111,3 +111,10 @@ export async function substractIngredientStock(arrayOfIdToSubstract: any) {
             .execute();    
     }
 }
+
+
+
+export async function getIngredientById(ingredientId: any) {
+    return await Ingredient.find({where:{id: ingredientId} })
+    
+}

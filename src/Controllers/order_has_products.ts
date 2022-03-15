@@ -1,12 +1,12 @@
 import { Response, Request } from 'express';
 import { getCustomProductPrice } from '../Database/customProduct';
-import { getExcludeIngredientOfOrder } from '../Database/exclude_ingredient_for_order';
-import { getPriceOfIngredient } from '../Database/ingredient';
+import { getExcludeIngredientOfOrder, getExcludeIngredientOfOrderbyId } from '../Database/exclude_ingredient_for_order';
+import { getIngredient, getIngredientById, getPriceOfIngredient } from '../Database/ingredient';
 import { createInvoice } from '../Database/invoice';
-import createOrder from '../Database/order';
-import { createOrderHasProductCustom, createOrderHasProductOfficial, getIdOfOrderHasProduct, getOrderProducts } from '../Database/order_has_products';
-import { getOfficialProductPrice } from '../Database/product';
-import { createCustomProducts } from '../Database/product_has_ingredient';
+import createOrder, { getOrderUndone } from '../Database/order';
+import { createOrderHasProductCustom, createOrderHasProductOfficial, getIdOfOrderHasProduct, getIdOfOrderHasProductById, getOrderProducts, getOrderProductsByIdThatDontHaveExcludeIngredient } from '../Database/order_has_products';
+import { getOfficialProductPrice, getProductById } from '../Database/product';
+import { createCustomProducts, getIngredientOfCustomProduct } from '../Database/product_has_ingredient';
 import { Order } from '../models/Order';
 import { excludeIngredient } from './exclude_ingredient_for_order';
 import { getIngredientOfOrder } from './ingredients';
@@ -57,6 +57,110 @@ export async function orderHasProductPost(req: Request, res: Response) {
     }
 
 }
+
+
+export async function getOrderHasProduct(req: Request, res: Response) {
+    
+    try {
+        const undoneOrder = await getOrderUndone();
+        const response = []
+        
+        for await (const { order_id } of undoneOrder) {
+            const finalObj = []
+            
+            if (order_id) {
+                
+                const orders = await getIdOfOrderHasProductById(order_id);
+                const orderID = []
+                for await (const {order_h_product_id, productid} of orders) {
+                    if (productid !== null) {
+                        orderID.push(order_h_product_id)                        
+                    }
+                }
+
+                for await (const idOfOrderDatabase of orderID) {
+                    
+                    let objtemp = {}
+                    const excludeIngredientOrder = await getExcludeIngredientOfOrderbyId(idOfOrderDatabase)
+
+                    if (excludeIngredientOrder.length == 0) {
+                        let objtempE = {}
+                        // take product with id in order_has_product 
+                        const getProductWithNoExclude = await getOrderProductsByIdThatDontHaveExcludeIngredient(idOfOrderDatabase)
+                        for await (const {productid} of getProductWithNoExclude) {
+                            const productWithNoExclude = await getProductById(productid)
+                            objtempE['product'] = productWithNoExclude[0]
+                            
+                        }
+                        objtempE['excludedIngredient'] = []
+                        finalObj.push(objtempE)
+                                                
+                    }
+
+                    
+                    if (excludeIngredientOrder.length > 0) {
+                        const productId = excludeIngredientOrder[0].productid
+
+                        const productData = await getProductById(productId)
+                        const arrIngredient = []                        
+                        for await (const {ingredientid} of excludeIngredientOrder) {
+                            const ingredientData = await getIngredientById(ingredientid);
+                            for await (const ingredient of ingredientData) {                                
+                                arrIngredient.push(ingredient)
+                            }
+                        }
+
+                        objtemp['product'] = productData[0]
+                        objtemp['excludedIngredient'] = arrIngredient
+
+                    }else {
+
+                        const ingredientCustom  = await getIngredientOfCustomProduct(order_id)
+                        const arrIngredientCustom = []
+                        for await (const {ingredientid} of ingredientCustom) {
+
+                            const ingredientData = await getIngredientById(ingredientid);
+                            for await (const ingrredientCustom of ingredientData) {
+                                arrIngredientCustom.push(ingrredientCustom)
+                                
+                            }
+                            
+                        }
+                        objtemp['product'] = {
+                            name: 'custom',
+                            custom: true
+                        }
+                        objtemp['ingredient'] = arrIngredientCustom
+                    }
+                    
+                    finalObj.push(objtemp)                    
+                }
+
+                const order = {
+                    order: order_id,
+                    orderProduct: finalObj
+                }
+                response.push(order)
+                
+                
+            }
+            
+        }
+
+        res.status(200).json({
+            status: 200,
+            data: response
+        })
+
+    } catch (error) {
+        res.status(404).json({
+            status: 404,
+            error: "Can't get that product for this order"
+        })
+    }
+
+}
+
 
 
 
