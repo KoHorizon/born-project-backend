@@ -13,6 +13,8 @@ export class User extends BaseEntity {
     @Column()
     pincode: string;
 
+    @Column()
+    role: string;
 
 
     @OneToMany(() => User_has_Order, user_h_order => user_h_order.user)

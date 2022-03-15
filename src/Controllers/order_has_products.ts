@@ -55,11 +55,10 @@ export async function orderHasProductPost(req: Request, res: Response) {
     } catch (error) {
         throw error;
     }
-
 }
 
 
-export async function getOrderHasProduct(req: Request, res: Response) {
+export async function getOrderHasProductUnsolved(req: Request, res: Response) {
     
     try {
         const undoneOrder = await getOrderUndone();
@@ -85,7 +84,6 @@ export async function getOrderHasProduct(req: Request, res: Response) {
 
                     if (excludeIngredientOrder.length == 0) {
                         let objtempE = {}
-                        // take product with id in order_has_product 
                         const getProductWithNoExclude = await getOrderProductsByIdThatDontHaveExcludeIngredient(idOfOrderDatabase)
                         for await (const {productid} of getProductWithNoExclude) {
                             const productWithNoExclude = await getProductById(productid)
@@ -94,7 +92,7 @@ export async function getOrderHasProduct(req: Request, res: Response) {
                         }
                         objtempE['excludedIngredient'] = []
                         finalObj.push(objtempE)
-                                                
+
                     }
 
                     
@@ -141,7 +139,6 @@ export async function getOrderHasProduct(req: Request, res: Response) {
                     orderProduct: finalObj
                 }
                 response.push(order)
-                
                 
             }
             

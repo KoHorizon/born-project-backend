@@ -13,7 +13,7 @@ export async function getProduct() {
     const ingredientUnavailable = await getRepository(Ingredient) // Get every ingredient that have 0 stocl
         .createQueryBuilder( "ingredient")
         .select(['ingredient.id'])
-        .where("ingredient.stock = 0")
+        .where("ingredient.stock < 1")
         .getMany();     
 
 

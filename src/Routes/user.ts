@@ -26,3 +26,8 @@ router.get('/', async(req,res) => {
 
 })
 
+
+router.get('/me', async(req,res) => {
+    let user = req.user
+    res.json({status: 200, user: user})
+})
