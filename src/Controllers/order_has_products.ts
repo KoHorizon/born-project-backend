@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { getCustomProductPrice } from '../Database/customProduct';
 import { getExcludeIngredientOfOrder, getExcludeIngredientOfOrderbyId } from '../Database/exclude_ingredient_for_order';
-import { getIngredient, getIngredientById, getPriceOfIngredient } from '../Database/ingredient';
+import { getIngredient, getIngredientById, getIngredientOfProductById, getPriceOfIngredient } from '../Database/ingredient';
 import { createInvoice } from '../Database/invoice';
 import createOrder, { getOrderUndone } from '../Database/order';
 import { createOrderHasProductCustom, createOrderHasProductOfficial, getIdOfOrderHasProduct, getIdOfOrderHasProductById, getOrderProducts, getOrderProductsByIdThatDontHaveExcludeIngredient } from '../Database/order_has_products';
@@ -87,7 +87,18 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
                         const getProductWithNoExclude = await getOrderProductsByIdThatDontHaveExcludeIngredient(idOfOrderDatabase)
                         for await (const {productid} of getProductWithNoExclude) {
                             const productWithNoExclude = await getProductById(productid)
+                            const ingredientOfProduct = await getIngredientOfProductById(productid)
+
+
+                            const arrOfIngredient = []
+                            for await (const {ingredientid} of ingredientOfProduct) {
+                                const ingredientData = await getIngredientById(ingredientid)
+                                arrOfIngredient.push(ingredientData[0])
+                                
+                            }                            
                             objtempE['product'] = productWithNoExclude[0]
+                            objtempE['ingredient'] = arrOfIngredient
+
                             
                         }
                         objtempE['excludedIngredient'] = []
@@ -108,7 +119,17 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
                             }
                         }
 
+                        const arrOfIngredients = []
+                        const ingredientOfProduct = await getIngredientOfProductById(productData[0].id)
+                            for await (const {ingredientid} of ingredientOfProduct) {
+                                const ingredientData = await getIngredientById(ingredientid)
+                                arrOfIngredients.push(ingredientData[0])
+                                
+                            }   
+                        
                         objtemp['product'] = productData[0]
+                        objtemp['ingredient'] = arrOfIngredients
+
                         objtemp['excludedIngredient'] = arrIngredient
 
                     }else {
