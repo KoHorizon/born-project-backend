@@ -61,6 +61,7 @@ export async function orderHasProductPost(req: Request, res: Response) {
 export async function getOrderHasProductUnsolved(req: Request, res: Response) {
     
     try {
+        
         const undoneOrder = await getOrderUndone();
         const response = []
         
@@ -71,11 +72,18 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
                 
                 const orders = await getIdOfOrderHasProductById(order_id);
                 const orderID = []
-                for await (const {order_h_product_id, productid} of orders) {
+                const orderCustomID = []
+
+                for await (const {order_h_product_id, productid, productcustomid} of orders) {
                     if (productid !== null) {
                         orderID.push(order_h_product_id)                        
                     }
+
+                    if (productcustomid !== null) {
+                        orderCustomID.push(productcustomid)                        
+                    }
                 }
+
 
                 for await (const idOfOrderDatabase of orderID) {
                     
@@ -106,8 +114,8 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
 
                     }
 
-                    
                     if (excludeIngredientOrder.length > 0) {
+                        
                         const productId = excludeIngredientOrder[0].productid
 
                         const productData = await getProductById(productId)
@@ -131,10 +139,14 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
                         objtemp['ingredient'] = arrOfIngredients
 
                         objtemp['excludedIngredient'] = arrIngredient
+                        finalObj.push(objtemp)                    
+                    }   
+                }
 
-                    }else {
-
-                        const ingredientCustom  = await getIngredientOfCustomProduct(order_id)
+                for await (const id of orderCustomID) {
+                    let objtemp = {}
+                    
+                    const ingredientCustom  = await getIngredientOfCustomProduct(id)
                         const arrIngredientCustom = []
                         for await (const {ingredientid} of ingredientCustom) {
 
@@ -150,8 +162,6 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
                             custom: true
                         }
                         objtemp['ingredient'] = arrIngredientCustom
-                    }
-                    
                     finalObj.push(objtemp)                    
                 }
 
@@ -176,7 +186,6 @@ export async function getOrderHasProductUnsolved(req: Request, res: Response) {
             error: "Can't get that product for this order"
         })
     }
-
 }
 
 
