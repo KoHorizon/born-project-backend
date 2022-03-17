@@ -13,6 +13,7 @@ router.post('/', async (req, res) => {
     let user = new User();
     user.name = req.body.name;
     user.pincode = sha512.sha512(req.body.pincode);
+    user.role = req.body.role;
 
     
     let savedUser = await User.save(user);

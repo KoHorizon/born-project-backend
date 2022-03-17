@@ -51,9 +51,9 @@ export async function orderHasProductPost(req: Request, res: Response) {
         const ingredient = await getIngredientAll();
         console.log(ingredient);
         
-        global.io.emit('Ordered', {
-            ingredient
-        })
+        // global.io.emit('Ordered', {
+        //     ingredient
+        // })
 
         res.status(200).json({
             status: 200,
