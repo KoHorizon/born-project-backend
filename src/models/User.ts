@@ -17,6 +17,6 @@ export class User extends BaseEntity {
     role: string;
 
 
-    @OneToMany(() => User_has_Order, user_h_order => user_h_order.user)
+    @OneToMany(() => User_has_Order, user_h_order => user_h_order.user, { onDelete: 'CASCADE' })
     user_h_order : User_has_Order[]
 }

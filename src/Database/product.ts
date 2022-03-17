@@ -160,3 +160,25 @@ export async function getOfficialProductPrice(productId: number) {
 export async function getProductById(productId: number) {
     return await Product.find({where:{id: productId}})
 }
+
+
+
+export async function updateProduct(value: any, id: any) {
+    return await getConnection()
+        .createQueryBuilder()
+        .update(Product)
+        .set({'name': value.name, 'price': value.price, 'day_special': value.day_special})
+        .where("id = (:id)", {id: id})
+        .execute();
+}
+
+
+
+export async function deleteProduct(id: number) {    
+    return await getConnection()
+    .createQueryBuilder()
+    .delete()
+    .from(Product)
+    .where("id = :id", { id: id })
+    .execute()
+}

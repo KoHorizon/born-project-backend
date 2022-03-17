@@ -11,10 +11,10 @@ export class Custom_Product extends BaseEntity {
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;
 
-    @OneToMany(() => Order_has_Product, order_h_custom_product => order_h_custom_product.product_custom)
+    @OneToMany(() => Order_has_Product, order_h_custom_product => order_h_custom_product.product_custom, { onDelete: 'CASCADE' })
     order_h_custom_product : Order_has_Product[]
 
 
-    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.product_custom)
+    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.product_custom, { onDelete: 'CASCADE' })
     product_h_ingredient : Product_has_Ingredient[]
 }

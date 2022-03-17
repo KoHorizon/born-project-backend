@@ -10,7 +10,7 @@ export class Invoice extends BaseEntity {
     @Column({ type: 'timestamp' }) 
     date: Date;
 
-    @ManyToOne(() => Order, order => order.invoice)
+    @ManyToOne(() => Order, order => order.invoice, { onDelete: 'CASCADE' })
     order: Order;
 
     @Column("decimal", { precision: 10, scale: 2 })

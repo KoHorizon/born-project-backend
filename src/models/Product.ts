@@ -35,14 +35,14 @@ export class Product extends BaseEntity {
     @Column("decimal", { precision: 10, scale: 2 })
     price: number;
 
-    @OneToMany(() => Order_has_Product, order_h_product => order_h_product.product)
+    @OneToMany(() => Order_has_Product, order_h_product => order_h_product.product, { onDelete: 'CASCADE' })
     order_h_product : Order_has_Product[]
 
 
-    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.product)
+    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.product, { onDelete: 'CASCADE' })
     product_h_ingredient : Product_has_Ingredient[]
 
 
-    @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.product)
+    @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.product, { onDelete: 'CASCADE' })
     exclude_ingredient_for_order : Exclude_Ingredient_For_Order[]
 }

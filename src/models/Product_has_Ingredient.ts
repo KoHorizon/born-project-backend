@@ -10,14 +10,14 @@ export class Product_has_Ingredient extends BaseEntity {
     product_has_ingredient_id: number;
 
 
-    @ManyToOne(() => Product, product => product.product_h_ingredient)
+    @ManyToOne(() => Product, product => product.product_h_ingredient, { onDelete: 'CASCADE' })
     product: Product
 
-    @ManyToOne(() => Ingredient, ingredient => ingredient.product_h_ingredient)
+    @ManyToOne(() => Ingredient, ingredient => ingredient.product_h_ingredient, { onDelete: 'CASCADE' })
     ingredient: Ingredient
 
 
-    @ManyToOne(() => Custom_Product, product_custom => product_custom.product_h_ingredient)
+    @ManyToOne(() => Custom_Product, product_custom => product_custom.product_h_ingredient, { onDelete: 'CASCADE' })
     product_custom: Custom_Product
 }
 

@@ -9,11 +9,11 @@ export class User_has_Order extends BaseEntity {
     user_has_order_id: number;
 
 
-    @ManyToOne(() => Order, order => order.user_h_order)
+    @ManyToOne(() => Order, order => order.user_h_order, { onDelete: 'CASCADE' })
     order: Order
 
 
-    @ManyToOne(() => User, user => user.user_h_order)
+    @ManyToOne(() => User, user => user.user_h_order, { onDelete: 'CASCADE' })
     user: User
 
     

@@ -19,13 +19,13 @@ export class Order extends BaseEntity {
     })
     email?: string;
 
-    @OneToMany(() => User_has_Order, user_h_order => user_h_order.order)
+    @OneToMany(() => User_has_Order, user_h_order => user_h_order.order, { onDelete: 'CASCADE' })
     user_h_order : User_has_Order[]
 
-    @OneToMany(() => Order_has_Product, order_h_product => order_h_product.order)
+    @OneToMany(() => Order_has_Product, order_h_product => order_h_product.order, { onDelete: 'CASCADE' })
     order_h_product : Order_has_Product[]
 
 
-    @OneToMany(() => Invoice, invoice => invoice.order)
+    @OneToMany(() => Invoice, invoice => invoice.order, { onDelete: 'CASCADE' })
     invoice : Invoice[]
 }

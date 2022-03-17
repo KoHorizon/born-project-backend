@@ -23,12 +23,12 @@ export class Ingredient extends BaseEntity {
     img_name?: string;
 
 
-    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.ingredient)
+    @OneToMany(() => Product_has_Ingredient, product_h_ingredient => product_h_ingredient.ingredient, { onDelete: 'CASCADE' })
     product_h_ingredient : Product_has_Ingredient[]
 
 
 
-    @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.ingredient)
+    @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.ingredient, { onDelete: 'CASCADE' })
     exclude_ingredient_for_order : Exclude_Ingredient_For_Order[]
 
 }

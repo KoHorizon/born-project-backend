@@ -10,14 +10,14 @@ export class Order_has_Product extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToOne(() => Order, order => order.user_h_order)
+    @ManyToOne(() => Order, order => order.user_h_order, { onDelete: 'CASCADE' })
     order: Order
 
 
-    @ManyToOne(() => Product, product => product.order_h_product)
+    @ManyToOne(() => Product, product => product.order_h_product, { onDelete: 'CASCADE' })
     product: Product
 
-    @ManyToOne(() => Custom_Product, product_custom => product_custom.order_h_custom_product)
+    @ManyToOne(() => Custom_Product, product_custom => product_custom.order_h_custom_product, { onDelete: 'CASCADE' })
     product_custom: Custom_Product
 
 

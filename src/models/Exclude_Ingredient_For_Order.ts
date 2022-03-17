@@ -10,13 +10,13 @@ export class Exclude_Ingredient_For_Order extends BaseEntity {
     exclude_ingredient_for_order_id: number;
 
 
-    @ManyToOne(() => Ingredient, ingredient => ingredient.exclude_ingredient_for_order)
+    @ManyToOne(() => Ingredient, ingredient => ingredient.exclude_ingredient_for_order, { onDelete: 'CASCADE' })
     ingredient: Ingredient
 
 
-    @ManyToOne(() => Order_has_Product, order_h_product => order_h_product.exclude_ingredient_for_order)
+    @ManyToOne(() => Order_has_Product, order_h_product => order_h_product.exclude_ingredient_for_order, { onDelete: 'CASCADE' })
     order_h_product: Order_has_Product
 
-    @ManyToOne(() => Product, product => product.exclude_ingredient_for_order)
+    @ManyToOne(() => Product, product => product.exclude_ingredient_for_order, { onDelete: 'CASCADE' })
     product: Product
 }
