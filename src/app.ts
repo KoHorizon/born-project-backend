@@ -6,6 +6,21 @@ import * as jwtexpress from 'express-jwt';
 import { User } from './models/User';
 import router from './Routes';
 import cors from 'cors';
+import http from 'http';
+import { Server } from 'socket.io';
+const socketIo = require("socket.io");
+
+declare global {
+  namespace Express {
+    interface Request {
+      user: User;
+      io: Server
+    }
+  }
+}
+
+
+
 
 require('dotenv').config();
 
@@ -15,6 +30,18 @@ var jwtexpress = require('express-jwt');
 
 
 const app = express();
+
+const server = http.createServer(app);
+const io = socketIo(server);
+global.io = io
+
+// const io = new Server(server, {
+//     cors: {
+//         origin: '*',
+//         methods: 'GET,PUT,POST,DELETE',
+//     }
+// });
+
 const port = 3000;
 app.use(cors());
 
@@ -30,9 +57,9 @@ app.use(jwtexpress({ secret: process.env.MY_SECRET_PASS, algorithms: ['HS256']})
 		res.status(401).send('invalid token...');
 		return;
 	}
+  req.io = io  
 	next();
 });
-
 
 
 app.use( async(req, res, next) =>{

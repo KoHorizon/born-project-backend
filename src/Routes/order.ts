@@ -5,4 +5,4 @@ import { orderFinishedPost } from '../Controllers/order';
 export const router = Router();
 
 
-router.post('/', orderFinishedPost);
+router.get('/:id', orderFinishedPost);

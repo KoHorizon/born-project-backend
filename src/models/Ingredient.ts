@@ -31,5 +31,4 @@ export class Ingredient extends BaseEntity {
     @OneToMany(() => Exclude_Ingredient_For_Order, exclude_ingredient_for_order => exclude_ingredient_for_order.ingredient)
     exclude_ingredient_for_order : Exclude_Ingredient_For_Order[]
 
-
 }

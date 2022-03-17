@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getConnection, getRepository } from "typeorm";
 import { Order } from "../models/Order";
 
 
@@ -30,5 +30,17 @@ export async function getOrderUndone() {
     .select(['order.id'])
     .where("order.state = (:state)", {state: false})
     .getRawMany();   
+    
+}
+
+
+export async function deliverOrder(id: any) {
+    console.log(id);
+    await getConnection()
+        .createQueryBuilder()
+        .update(Order)
+        .set({'state': true})
+        .where("id = (:id)", {id: id})
+        .execute();
     
 }

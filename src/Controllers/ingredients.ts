@@ -10,6 +10,8 @@ import { Order } from '../models/Order';
 export async function ingredientControllerPost(req: Request, res: Response) {
     try {
         const value = req.body
+        console.log(value);
+        
         await createIngredient(value);
         return res.status(200).json({
             status: 200,

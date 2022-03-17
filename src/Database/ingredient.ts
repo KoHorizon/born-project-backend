@@ -10,7 +10,7 @@ export async function createIngredient(dataIngredient: Array<Ingredient>) {
     if (!Array.isArray(dataIngredient)) {
         throw new Error('not array');  
     }
-    let acceptedKeys = ['name','price','stock','img_name'];
+    let acceptedKeys = ['name','price','stock'];
     let validFormat = true;
 
     (dataIngredient).forEach(data => {        
@@ -49,7 +49,7 @@ export async function createIngredient(dataIngredient: Array<Ingredient>) {
                     ingredient.stock = data.stock;
                     break;
                 case "img_name":
-                    ingredient.img_name = data.img_name;
+                    ingredient.img_name = 'data.img_name';
                     break;
             }
         

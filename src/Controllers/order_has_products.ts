@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
 import { getCustomProductPrice } from '../Database/customProduct';
 import { getExcludeIngredientOfOrder, getExcludeIngredientOfOrderbyId } from '../Database/exclude_ingredient_for_order';
-import { getIngredient, getIngredientById, getIngredientOfProductById, getPriceOfIngredient } from '../Database/ingredient';
+import { getIngredient, getIngredientAll, getIngredientById, getIngredientOfProductById, getPriceOfIngredient } from '../Database/ingredient';
 import { createInvoice } from '../Database/invoice';
 import createOrder, { getOrderUndone } from '../Database/order';
 import { createOrderHasProductCustom, createOrderHasProductOfficial, getIdOfOrderHasProduct, getIdOfOrderHasProductById, getOrderProducts, getOrderProductsByIdThatDontHaveExcludeIngredient } from '../Database/order_has_products';
@@ -46,6 +46,14 @@ export async function orderHasProductPost(req: Request, res: Response) {
         const priceOfOrder = await orderHasPrice(createdOrder);
         const invoiceCreation = await createInvoice(priceOfOrder, createdOrder);
         const ingredientOfOrder = await getIngredientOfOrder(createdOrder);        
+
+
+        const ingredient = await getIngredientAll();
+        console.log(ingredient);
+        
+        global.io.emit('Ordered', {
+            ingredient
+        })
 
         res.status(200).json({
             status: 200,
