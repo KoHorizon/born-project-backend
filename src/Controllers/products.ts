@@ -51,7 +51,6 @@ export async function productControllerDelete(req: Request, res: Response) {
     try {
         const id = parseInt(req.params.id)
         const deletedProduct = await deleteProduct(id)
-        console.log(deletedProduct);
         
 
         res.status(200).json({
